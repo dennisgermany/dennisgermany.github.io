@@ -25,6 +25,11 @@
 	Vereinsauswahl
 	<input type="text" ng-model="indexCtrl.searchInput">
 	<button ng-click="indexCtrl.fetch()">Suchen</button>
+	<div id="alternatives">
+	<div ng-repeat="alternative in indexCtrl.service.searchClubResult.alternatives">
+	<span ng-click="indexCtrl.openPage(alternative)">{{alternative.href}} {{alternative.name}}</span>
+	</div>
+	</div>
 	<br/><br/>
 	Kontaktdaten:<br/>
 	{{indexCtrl.service.searchClubResult.contact}}<br/><br/>

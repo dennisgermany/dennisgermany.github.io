@@ -5,13 +5,17 @@
 					"DataService",
 					function() {
 						var searchClubResult = {
-							full : '',
-							contact : 'Hanno Kessel Kapellenstr. 59, 50226 Frechen Mobil 01737296158 http://www.ttcloevenich.de/',
-							location : [ {
-								full : 'Albert-Schweitzer-Schule Breslauer Str., 50858 Köln-Weiden Tel 01737296158 www.ttcloevenich.de Routenplaner',
-								address : 'Breslauer Str., 50858 Köln-Weiden',
-								url : 'https://maps.googleapis.com/maps/api/staticmap?center=Breslauer%20Str.,%2050858%20K%C3%B6ln-Weiden&zoom=10&size=400x400&markers=label:AB%7Ccolor:blue%7CBreslauer%20Str.,%2050858%20K%C3%B6ln-Weiden'
-							} ]
+							found : true,
+							foundResult : {
+								full : '',
+								contact : 'Hanno Kessel Kapellenstr. 59, 50226 Frechen Mobil 01737296158 http://www.ttcloevenich.de/',
+								location : [ {
+									full : 'Albert-Schweitzer-Schule Breslauer Str., 50858 Köln-Weiden Tel 01737296158 www.ttcloevenich.de Routenplaner',
+									address : 'Breslauer Str., 50858 Köln-Weiden',
+									url : 'https://maps.googleapis.com/maps/api/staticmap?center=Breslauer%20Str.,%2050858%20K%C3%B6ln-Weiden&zoom=10&size=400x400&markers=label:AB%7Ccolor:blue%7CBreslauer%20Str.,%2050858%20K%C3%B6ln-Weiden'
+								} ]
+							},
+							alternatives : [{}]
 						};
 						this.searchClub = function(name, callback) {
 							var site = 'http://wttv.click-tt.de/cgi-bin/WebObjects/nuLigaTTDE.woa/wa/clubSearch?federation=WTTV&federations=WTTV&searchFor='
@@ -19,25 +23,30 @@
 							var xpath = "//html/body/div[3]/div[5]/div[2]/div";
 							requestCrossDomain(site, xpath, function(data) {
 								searchClubResult['full'] = data.results[0];
-								handleNotFoundClub(data, callback);
-								// handleFoundClub(data, callback);
+								handleNotFoundClub(data, searchClubResult);
+								// handleFoundClub(data, searchClubResult,
+								// callback);
 								callback();
 							}.bind(searchClubResult));
 						};
-						function handleNotFoundClub(data) {
+						function handleNotFoundClub(data, searchClubResult) {
 							var html = $.parseHTML(data.results[0]);
 							var jqHtml = $(html);
 							var res = $('table tbody tr td a', jqHtml);
-							res.each(function(index, data) {
-								var href= $(data).attr('href');
-								var name= $(data).text();
-								console.log(href + " --> " + name);
-							});
+							console.log(searchClubResult);
+							res
+									.each(function(index, data) {
+										console.log(searchClubResult);
+										var href = 'http://wttv.click-tt.de' + $(data).attr('href');
+										var name = $(data).text();
+										searchClubResult['alternatives'].push({href:href, name:name});
+									}.bind(searchClubResult));
+							console.log(searchClubResult['alternatives']);
 							foo = res;
 							console.log(res);
 						}
 
-						function handleFoundClub(data) {
+						function handleFoundClub(data, searchClubResult) {
 							var html = $.parseHTML(data.results[0]);
 							searchClubResult['contact'] = $(
 									$('table tbody tr td p', $(html)).get(1))

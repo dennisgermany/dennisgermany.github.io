@@ -1,6 +1,6 @@
 (function() {
 	var app = angular.module('angularTT', ['services']);
-	app.controller('IndexController', function(DataService, $scope) {
+	app.controller('IndexController', function(DataService, $scope, $window) {
 		this.searchInput = '';
 		this.service = DataService;
 		this.update = function() {
@@ -10,5 +10,8 @@
 		this.fetch = function() {
 			DataService.searchClub(this.searchInput, this.update);
 		};
+		this.openPage = function(alternative){
+			$window.open(alternative['href']);
+		}
 	});
 })();
