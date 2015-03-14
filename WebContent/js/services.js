@@ -5,7 +5,7 @@
 					"DataService",
 					function() {
 						var searchClubResult = {
-							found : true,
+							found : false,
 							foundResult : {
 								full : '',
 								contact : 'Hanno Kessel Kapellenstr. 59, 50226 Frechen Mobil 01737296158 http://www.ttcloevenich.de/',
@@ -17,23 +17,42 @@
 							},
 							alternatives : [{}]
 						};
-						this.searchClub = function(name, callback) {
+						this.searchClub = function(search, callback) {
 							var site = 'http://wttv.click-tt.de/cgi-bin/WebObjects/nuLigaTTDE.woa/wa/clubSearch?federation=WTTV&federations=WTTV&searchFor='
-									+ name;
+									+ search;
 							var xpath = "//html/body/div[3]/div[5]/div[2]/div";
 							requestCrossDomain(site, xpath, function(data) {
-								searchClubResult['full'] = data.results[0];
-								handleNotFoundClub(data, searchClubResult);
-								// handleFoundClub(data, searchClubResult,
-								// callback);
+								var html = $.parseHTML(data.results[0]);
+								var jqHtml = $(html);
+								var text = $('h1',jqHtml).text();
+								if (text.indexOf('Vereinssuche') == -1 ){
+									searchClubResult['found'] = true;
+								} else {
+									searchClubResult['found'] = false;
+								}
+								if (searchClubResult['found']){
+									handleFoundClub(data, searchClubResult);
+								} else {
+									handleNotFoundClub(data, searchClubResult);
+								}
 								callback();
 							}.bind(searchClubResult));
 						};
+						this.openClub = function(href, callback){
+							var site = href;
+							var xpath = "//html/body/div[3]/div[5]/div[2]/div";
+							requestCrossDomain(site, xpath, function(data) {
+								searchClubResult['full'] = data.results[0];
+								handleFoundClub(data, searchClubResult);
+								callback();
+							}.bind(searchClubResult));
+						}
 						function handleNotFoundClub(data, searchClubResult) {
 							var html = $.parseHTML(data.results[0]);
 							var jqHtml = $(html);
 							var res = $('table tbody tr td a', jqHtml);
 							console.log(searchClubResult);
+							searchClubResult['alternatives'].length = 0;
 							res
 									.each(function(index, data) {
 										console.log(searchClubResult);
@@ -48,23 +67,24 @@
 
 						function handleFoundClub(data, searchClubResult) {
 							var html = $.parseHTML(data.results[0]);
-							searchClubResult['contact'] = $(
+							searchClubResult['foundResult']['contact'] = $(
 									$('table tbody tr td p', $(html)).get(1))
 									.text();
-							searchClubResult['location'][0]['full'] = $(
+							searchClubResult['foundResult']['location'][0]['full'] = $(
 									$('table tbody tr td table tbody tr td p',
 											$(html)).get(1)).text();
-							searchClubResult['location'][0]['address'] = searchClubResult['location'][0]['full']
+							searchClubResult['foundResult']['location'][0]['address'] = searchClubResult['foundResult']['location'][0]['full']
 									.split('\n')[1];
-							var address = searchClubResult['location'][0]['address'];
+							var address = searchClubResult['foundResult']['location'][0]['address'];
 							var url = 'https://maps.googleapis.com/maps/api/staticmap?center='
 									+ address
 									+ '&zoom=10&size=400x400&markers=label:AB|color:blue|'
 									+ address;
-							searchClubResult['location'][0]['url'] = encodeURI(url);
+							searchClubResult['foundResult']['location'][0]['url'] = encodeURI(url);
 						}
 						return {
 							searchClub : this.searchClub,
+							openClub : this.openClub,
 							searchClubResult : searchClubResult
 						};
 					});

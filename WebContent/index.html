@@ -20,21 +20,21 @@
 			console.log('head done');
 		});
 	</script>
-	<h1>test</h1>
+	<h1>Vereinssuche</h1>
 	<div id="foo">{{indexCtrl.foo}}</div>
 	Vereinsauswahl
 	<input type="text" ng-model="indexCtrl.searchInput">
 	<button ng-click="indexCtrl.fetch()">Suchen</button>
 	<div id="alternatives">
 	<div ng-repeat="alternative in indexCtrl.service.searchClubResult.alternatives">
-	<span ng-click="indexCtrl.openPage(alternative)">{{alternative.href}} {{alternative.name}}</span>
+	<span ng-click="indexCtrl.openClub(alternative)">{{alternative.href}} {{alternative.name}}</span>
 	</div>
 	</div>
 	<br/><br/>
 	Kontaktdaten:<br/>
-	{{indexCtrl.service.searchClubResult.contact}}<br/><br/>
+	{{indexCtrl.service.searchClubResult.foundResult.contact}}<br/><br/>
 	Spiel-Lokal 1:<br/>
-	{{indexCtrl.service.searchClubResult.location[0]['full']}}
-	<img src="{{indexCtrl.service.searchClubResult.location[0]['url']}}"/>
+	{{indexCtrl.service.searchClubResult.foundResult.location[0]['full']}}
+	<img src="{{indexCtrl.service.searchClubResult.foundResult.location[0]['url']}}"/>
 </body>
 </html>

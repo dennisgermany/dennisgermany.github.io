@@ -10,8 +10,11 @@
 		this.fetch = function() {
 			DataService.searchClub(this.searchInput, this.update);
 		};
-		this.openPage = function(alternative){
+		this.openClubPageInNewWindows = function(alternative){
 			$window.open(alternative['href']);
+		}
+		this.openClub = function(alternative){
+			DataService.openClub(alternative['href'], this.update);
 		}
 	});
 })();
