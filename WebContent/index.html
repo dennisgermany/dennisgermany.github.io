@@ -15,26 +15,26 @@
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body class="container" ng-controller="IndexController as indexCtrl">
-	<script type="text/javascript">
-		head.js("jqXMLUtils.js", function() {
-			console.log('head done');
-		});
-	</script>
 	<h1>Vereinssuche</h1>
 	<div id="foo">{{indexCtrl.foo}}</div>
 	Vereinsauswahl
 	<input type="text" ng-model="indexCtrl.searchInput">
-	<button ng-click="indexCtrl.fetch()">Suchen</button>
+	<button class="btn btn-default" ng-click="indexCtrl.fetch()">Suchen</button>
 	<div id="alternatives">
-	<div ng-repeat="alternative in indexCtrl.service.searchClubResult.alternatives">
-	<span ng-click="indexCtrl.openClub(alternative)">{{alternative.href}} {{alternative.name}}</span>
+		<div
+			ng-repeat="alternative in indexCtrl.service.searchClubResult.alternatives"
+			class="club-alternative">
+			<span style="cursor: pointer" ng-click="indexCtrl.openClub(alternative)">{{alternative.name}}</span>
+		</div>
 	</div>
-	</div>
-	<br/><br/>
-	Kontaktdaten:<br/>
-	{{indexCtrl.service.searchClubResult.foundResult.contact}}<br/><br/>
-	Spiel-Lokal 1:<br/>
+	<br />
+	<br /> Kontaktdaten:
+	<br /> {{indexCtrl.service.searchClubResult.foundResult.contact}}
+	<br />
+	<br /> Spiel-Lokal 1:
+	<br />
 	{{indexCtrl.service.searchClubResult.foundResult.location[0]['full']}}
-	<img src="{{indexCtrl.service.searchClubResult.foundResult.location[0]['url']}}"/>
+	<img
+		src="{{indexCtrl.service.searchClubResult.foundResult.location[0]['url']}}" />
 </body>
 </html>
