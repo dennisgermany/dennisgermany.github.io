@@ -16,5 +16,8 @@
 		this.openClub = function(alternative){
 			DataService.openClub(alternative['href'], this.update);
 		}
+		this.loadTtrList = function(){
+			DataService.loadTtrList();
+		}
 	});
 })();

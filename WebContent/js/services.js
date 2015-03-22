@@ -21,7 +21,7 @@
 							var site = 'http://wttv.click-tt.de/cgi-bin/WebObjects/nuLigaTTDE.woa/wa/clubSearch?federation=WTTV&federations=WTTV&searchFor='
 									+ search;
 							var xpath = "//html/body/div[3]/div[5]/div[2]/div";
-							requestCrossDomain(site, xpath, function(data) {
+							requestCrossDomain(site, 'HTML', xpath, function(data) {
 								var html = $.parseHTML(data.results[0]);
 								var jqHtml = $(html);
 								var text = $('h1',jqHtml).text();
@@ -41,7 +41,7 @@
 						this.openClub = function(href, callback){
 							var site = href;
 							var xpath = "//html/body/div[3]/div[5]/div[2]/div";
-							requestCrossDomain(site, xpath, function(data) {
+							requestCrossDomain(site, 'HTML', xpath, function(data) {
 								searchClubResult['full'] = data.results[0];
 								handleFoundClub(data, searchClubResult);
 								callback();
@@ -82,9 +82,19 @@
 									+ address;
 							searchClubResult['foundResult']['location'][0]['url'] = encodeURI(url);
 						}
+						this.loadTtrList = function(){
+							var fed = 'WTTV';
+							var clubNr = '151039';
+							var site = 'https://www.mytischtennis.de/secure/iPhoneJoolaRanglisteNURanking.cfm?asynchronous=no&germansRanking=yes&currentRanking=yes&maxRows=150&personId=1234&clubNr='+ clubNr +'&fedNickname=' + fed;
+							var xpath = '';
+							requestCrossDomain(site, 'XML', xpath, function(data) {
+								console.log(data);
+							});
+						}
 						return {
 							searchClub : this.searchClub,
 							openClub : this.openClub,
+							loadTtrList : this.loadTtrList,
 							searchClubResult : searchClubResult
 						};
 					});

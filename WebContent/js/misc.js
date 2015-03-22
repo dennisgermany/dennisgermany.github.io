@@ -1,4 +1,4 @@
-function requestCrossDomain(site, xpath, callback) {
+function requestCrossDomain(site, type, xpath, callback) {
 
 	// If no url was passed, exit.
 	if (!site) {
@@ -8,11 +8,18 @@ function requestCrossDomain(site, xpath, callback) {
 
 	// Take the provided url, and add it to a YQL query. Make sure you encode
 	// it!
-
-	var yql = 'http://query.yahooapis.com/v1/public/yql?q='
+	if (type == 'HTML'){
+		var yql = 'http://query.yahooapis.com/v1/public/yql?q='
 			+ encodeURIComponent('select * from html where url="' + site
 					+ '" and xpath=\'' + xpath + '\'')
 			+ '&format=xml&callback=?';
+	}
+	if (type == 'XML'){
+		var yql = 'http://query.yahooapis.com/v1/public/yql?q='
+			+ encodeURIComponent('select * from xml where url="' + site + '"')
+			+ '&format=xml&callback=?';
+	}
+	
 
 	// Request that YSQL string, and run a callback function.
 	// Pass a defined function to prevent cache-busting.
