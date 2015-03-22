@@ -2,8 +2,8 @@
 <html ng-app="angularTT">
 <head>
 <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css"
 	href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap.min.css" />
 <script type="text/javascript"
@@ -17,28 +17,64 @@
 	src="http://cdnjs.cloudflare.com/ajax/libs/headjs/0.99/head.min.js"></script>
 <link rel="stylesheet" type="text/css" href="style.css">
 </head>
-<body class="container" ng-controller="IndexController as indexCtrl">
-	<h1>Vereinssuche</h1>
-	<div id="foo">{{indexCtrl.foo}}</div>
-	Vereinsauswahl
-	<input type="text" ng-model="indexCtrl.searchInput">
-	<button class="btn btn-default" ng-click="indexCtrl.fetch()">Suchen</button>
-	<div id="alternatives">
-		<div
-			ng-repeat="alternative in indexCtrl.service.searchClubResult.alternatives"
-			class="club-alternative">
-			<span style="cursor: pointer" ng-click="indexCtrl.openClub(alternative)">{{alternative.name}}</span>
+<body ng-controller="IndexController as indexCtrl">
+	<div class="container">
+		<div class="row">
+			<div class="col-xs-12">
+				<h1>Vereinssuche</h1>
+				<div id="foo">{{indexCtrl.foo}}</div>
+				Vereinsauswahl <input type="text" ng-model="indexCtrl.searchInput"
+					class=".form-control">
+				<button class="btn btn-default" ng-click="indexCtrl.fetch()">Suchen</button>
+
+				<div class="col-xs-12">
+					<div id="alternatives">
+						<div
+							ng-repeat="alternative in indexCtrl.service.searchClubResult.alternatives"
+							class="club-alternative">
+							<span style="cursor: pointer"
+								ng-click="indexCtrl.openClub(alternative)">{{alternative.name}}</span>
+						</div>
+					</div>
+				</div>
+
+				<br /> <br /> Kontaktdaten: <br />
+				{{indexCtrl.service.searchClubResult.foundResult.contact}} <br /> <br />
+				Spiel-Lokal 1: <br />
+				{{indexCtrl.service.searchClubResult.foundResult.location[0]['full']}}
+			</div>
+			<div class="col-xs-12">
+				<div style="width: 100%; overflow: scroll;">
+					<img
+						src="{{indexCtrl.service.searchClubResult.foundResult.location[0]['url']}}" />
+				</div>
+			</div>
+			<div class="col-xs-12">
+				<table class="table table-striped table-bordered .table-hover">
+					<thead>
+						<tr>
+							<td>Datum</td>
+							<td>Uhrzeit</td>
+							<td>Liga</td>
+							<td>Heim</td>
+							<td>Gast</td>
+							<td>Ergebnis</td>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="previousGame"
+							ng-repeat="previousGame in indexCtrl.service.searchClubResult.foundResult.previousGames">
+							<td>{{previousGame.date}}</td>
+							<td>{{previousGame.time}}</td>
+							<td>{{previousGame.league}}</td>
+							<td>{{previousGame.home}}</td>
+							<td>{{previousGame.guest}}</td>
+							<td>{{previousGame.score}}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
-	<br />
-	<br /> Kontaktdaten:
-	<br /> {{indexCtrl.service.searchClubResult.foundResult.contact}}
-	<br />
-	<br /> Spiel-Lokal 1:
-	<br />
-	{{indexCtrl.service.searchClubResult.foundResult.location[0]['full']}}
-	<img
-		src="{{indexCtrl.service.searchClubResult.foundResult.location[0]['url']}}" />
-		<button ng-click="indexCtrl.loadTtrList()">TtrList</button>
 </body>
 </html>
